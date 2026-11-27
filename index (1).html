@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lopez – Editor de vídeo</title>
+<meta name="description" content="Lopez – editor de vídeo. Portfólio de short form, long form, talking head e games.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#161B2E; --surface:#1F2640; --line:#2F3858;
+  --text:#EEF0F8; --muted:#A3AAC6;
+  --short:#FF6B8B; --long:#7CD6FF; --talking:#FFC857; --games:#9B8CFF;
+  --font:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:4.5rem}
+body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6;font-size:1.0625rem}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--talking);outline-offset:3px}
+.wrap{max-width:1100px;margin:0 auto;padding:0 1.25rem}
+
+/* menu */
+nav{position:sticky;top:0;z-index:5;background:rgba(22,27,46,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;justify-content:space-between;align-items:center;height:3.75rem}
+.logo{font-weight:800;font-size:1.35rem;text-decoration:none;letter-spacing:-.02em}
+nav ul{display:flex;gap:1.5rem;list-style:none;padding:0}
+nav ul a{text-decoration:none;color:var(--muted);font-weight:600}
+nav ul a:hover{color:var(--text)}
+
+/* hero */
+.hero{padding:5rem 0 4rem;display:grid;gap:2rem;grid-template-columns:1fr;align-items:center}
+.hero.com-foto{grid-template-columns:1.3fr 1fr}
+.hero h1{font-size:clamp(4rem,15vw,10rem);font-weight:800;line-height:.9;letter-spacing:-.04em}
+.hero .cargo{margin-top:1.5rem;font-size:1.5rem;font-weight:600}
+.hero .tipos{margin-top:.4rem;color:var(--muted)}
+.hero .ir{display:inline-block;margin-top:2rem;font-weight:600;text-decoration:none;border-bottom:2px solid var(--text)}
+.hero img{width:100%;border-radius:12px;aspect-ratio:4/5;object-fit:cover;display:none}
+.hero.com-foto img{display:block}
+.faixa{display:grid;grid-template-columns:1fr 2.4fr 1.4fr 1.8fr;gap:6px;height:10px;margin-bottom:1rem}
+.faixa i:nth-child(1){background:var(--short)}.faixa i:nth-child(2){background:var(--long)}
+.faixa i:nth-child(3){background:var(--talking)}.faixa i:nth-child(4){background:var(--games)}
+.faixa i{border-radius:5px}
+
+/* trabalhos */
+section{padding:3rem 0}
+.rotulo{color:var(--muted);font-weight:600;font-size:.95rem;margin-bottom:.5rem}
+.cat{margin-bottom:3.5rem}
+.cat h2{font-size:clamp(1.8rem,5vw,2.6rem);font-weight:800;letter-spacing:-.02em;margin-bottom:1.25rem;padding-left:.9rem;border-left:6px solid var(--cor)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;align-items:start}
+.cat.vertical .grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.card h3{font-size:1.1rem;margin-top:.75rem;font-weight:600}
+.thumb{position:relative;width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:var(--surface);border:2px solid var(--cor);padding:0;cursor:pointer;display:block}
+.cat.vertical .thumb{aspect-ratio:9/16}
+.thumb img,.thumb iframe,.thumb video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:0;background:#000}
+.thumb .play{position:absolute;inset:0;display:grid;place-items:center;font-size:2.5rem;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+
+/* sobre e contato */
+.sobre p{font-size:1.35rem;max-width:40rem;line-height:1.5}
+.contato h2{font-size:clamp(2rem,6vw,3.2rem);font-weight:800;letter-spacing:-.02em}
+.links{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.5rem}
+.links a{font-weight:600;text-decoration:none;background:var(--text);color:var(--bg);padding:.6rem 1.2rem;border-radius:8px}
+.links a:hover{background:var(--talking)}
+.sobre,.contato{border-top:1px solid var(--line)}
+footer{padding:2rem 0;color:var(--muted);font-size:.9rem}
+@media (max-width:720px){.hero.com-foto{grid-template-columns:1fr}nav ul{gap:1rem}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+  <a class="logo" href="#topo" id="logo">lopez.</a>
+  <ul>
+    <li><a href="#trabalhos">Trabalhos</a></li>
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+</div></nav>
+
+<header class="wrap hero" id="topo">
+  <div>
+    <div class="faixa" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <h1>Lopez</h1>
+    <p class="cargo">Editor de vídeo</p>
+    <p class="tipos">Short form · Long form · Talking head · Games</p>
+    <a class="ir" href="#trabalhos">Ver trabalhos ↓</a>
+  </div>
+  <img id="foto" alt="Foto do Lopez">
+</header>
+
+<main>
+  <section id="trabalhos"><div class="wrap">
+    <p class="rotulo">Portfólio</p>
+    <div id="categorias"></div>
+  </div></section>
+
+  <section class="sobre" id="sobre"><div class="wrap">
+    <p class="rotulo">Sobre</p>
+    <p id="sobre-texto"></p>
+  </div></section>
+
+  <section class="contato" id="contato"><div class="wrap">
+    <p class="rotulo">Contato</p>
+    <h2>Vamos trabalhar juntos.</h2>
+    <div class="links" id="links"></div>
+  </div></section>
+</main>
+<footer><div class="wrap">© <span id="ano"></span> Lopez. Feito para editar, feito para ser visto.</div></footer>
+
+<script>
+/* ====== EDITE AQUI ====== */
+const FOTO = "";   // ex.: "foto.jpg" (suba a imagem no repositório). Vazio = sem foto.
+const SOBRE = "Oi! Eu sou o Lopez, editor de vídeo. Edito short form, vídeos longos, talking head e conteúdo de games, sempre com foco em ritmo e retenção.";
+
+const CATEGORIAS = [
+  { id: "long",    nome: "Long form",    cor: "var(--long)" },
+  { id: "short",   nome: "Short form",   cor: "var(--short)", vertical: true },
+  { id: "talking", nome: "Talking head", cor: "var(--talking)" },
+  { id: "games",   nome: "Games",        cor: "var(--games)" }
+];
+
+/* arquivo + capa: caminhos dentro do repositório. Ou use youtube: "ID_DO_VIDEO". */
+const VIDEOS = [
+  { titulo: "Talking head – MasterClass", cat: "talking", arquivo: "videos/talking-head-masterclass.mp4", capa: "capas/talking-head-masterclass.jpg" },
+  { titulo: "Primeiro vídeo",             cat: "games",   arquivo: "videos/primeiro-video.mp4",            capa: "capas/primeiro-video.jpg" }
+];
+
+const CONTATOS = [
+  { texto: "E-mail",    url: "mailto:seuemail@exemplo.com" },
+  { texto: "Instagram", url: "https://instagram.com/seuusuario" },
+  { texto: "YouTube",   url: "https://youtube.com/@seucanal" }
+];
+/* ========================= */
+
+function criarThumb(v){
+  const t = document.createElement("button");
+  t.className = "thumb";
+  t.setAttribute("aria-label", "Assistir: " + v.titulo);
+  const capa = v.capa || (v.youtube ? "https://img.youtube.com/vi/" + v.youtube + "/hqdefault.jpg" : "");
+  t.innerHTML = (capa ? '<img loading="lazy" alt="" src="' + capa + '">' : "") + '<span class="play">▶</span>';
+  t.onclick = () => {
+    let el;
+    if (v.arquivo){
+      el = document.createElement("video");
+      el.src = v.arquivo; el.poster = capa; el.controls = true; el.autoplay = true; el.playsInline = true;
+    } else {
+      el = document.createElement("iframe");
+      el.src = "https://www.youtube-nocookie.com/embed/" + v.youtube + "?autoplay=1";
+      el.allow = "autoplay; encrypted-media; picture-in-picture"; el.allowFullscreen = true; el.title = v.titulo;
+    }
+    t.replaceChildren(el);
+  };
+  return t;
+}
+
+const box = document.getElementById("categorias");
+CATEGORIAS.forEach(c => {
+  const lista = VIDEOS.filter(v => v.cat === c.id);
+  if (!lista.length) return;               // categoria sem vídeo não aparece
+  const sec = document.createElement("div");
+  sec.className = "cat" + (c.vertical ? " vertical" : "");
+  sec.style.setProperty("--cor", c.cor);
+  sec.innerHTML = "<h2></h2><div class='grid'></div>";
+  sec.querySelector("h2").textContent = c.nome;
+  const grid = sec.querySelector(".grid");
+  lista.forEach(v => {
+    const card = document.createElement("article"); card.className = "card";
+    const h = document.createElement("h3"); h.textContent = v.titulo;
+    card.append(criarThumb(v), h); grid.append(card);
+  });
+  box.append(sec);
+});
+
+if (FOTO){ const f = document.getElementById("foto"); f.src = FOTO; document.getElementById("topo").classList.add("com-foto"); }
+document.getElementById("sobre-texto").textContent = SOBRE;
+CONTATOS.forEach(c => {
+  const a = document.createElement("a"); a.href = c.url; a.textContent = c.texto;
+  if (!c.url.startsWith("mailto:")) { a.target = "_blank"; a.rel = "noopener"; }
+  document.getElementById("links").append(a);
+});
+document.getElementById("ano").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
