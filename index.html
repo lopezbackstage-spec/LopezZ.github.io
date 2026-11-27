@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lopez – Editor de vídeo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#161B2E; --surface:#1F2640; --line:#2F3858;
+  --text:#EEF0F8; --muted:#A3AAC6;
+  --short:#FF6B8B; --long:#7CD6FF; --talk:#FFC857; --game:#9B8CFF;
+  --font:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6;font-size:1.0625rem}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--talk);outline-offset:3px}
+.wrap{max-width:1100px;margin:0 auto;padding:0 1.25rem}
+
+/* hero */
+.hero{padding:5rem 0 3rem}
+.hero h1{font-size:clamp(3rem,10vw,6.5rem);font-weight:800;line-height:1;letter-spacing:-.03em}
+.hero p{margin-top:1.25rem;max-width:34rem;color:var(--muted);font-size:1.2rem}
+.timeline{display:grid;grid-template-columns:1fr 2.4fr 1.4fr 1.8fr;gap:6px;margin-top:2.5rem;height:44px}
+.timeline span{border-radius:6px;display:flex;align-items:center;padding:0 .75rem;color:#161B2E;font-weight:600;font-size:.9rem;white-space:nowrap;overflow:hidden}
+.timeline .c1{background:var(--short)}.timeline .c2{background:var(--long)}
+.timeline .c3{background:var(--talk)}.timeline .c4{background:var(--game)}
+
+/* filtros */
+.filters{display:flex;flex-wrap:wrap;gap:.5rem;margin:2.5rem 0 1.5rem}
+.filters button{font:inherit;font-size:.95rem;font-weight:600;color:var(--text);background:var(--surface);border:2px solid var(--line);border-radius:999px;padding:.45rem 1.1rem;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--text);color:var(--bg);border-color:var(--text)}
+
+/* grade */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;align-items:start}
+.card h3{font-size:1.1rem;margin-top:.75rem;font-weight:600}
+.card small{color:var(--muted)}
+.thumb{position:relative;width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:var(--surface);border:2px solid var(--line);padding:0;cursor:pointer;display:block}
+.card[data-cat="short"] .thumb{aspect-ratio:9/16;max-width:260px}
+.thumb img,.thumb iframe{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:0}
+.thumb .play{position:absolute;inset:0;display:grid;place-items:center;font-size:2.5rem;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+.thumb.vazio{display:grid;place-items:center;color:var(--muted);cursor:default;font-size:.95rem;text-align:center;padding:1rem;border-style:dashed}
+.card[data-cat="short"] .thumb{border-color:var(--short)}
+.card[data-cat="long"] .thumb{border-color:var(--long)}
+.card[data-cat="talking"] .thumb{border-color:var(--talk)}
+.card[data-cat="games"] .thumb{border-color:var(--game)}
+
+/* contato */
+.contato{margin:5rem 0 4rem;padding-top:2.5rem;border-top:2px solid var(--line)}
+.contato h2{font-size:2rem;font-weight:800}
+.contato p{color:var(--muted);margin:.5rem 0 1.25rem}
+.links{display:flex;flex-wrap:wrap;gap:.75rem}
+.links a{font-weight:600;text-decoration:none;background:var(--text);color:var(--bg);padding:.6rem 1.2rem;border-radius:8px}
+.links a:hover{background:var(--talk)}
+footer{padding-bottom:2rem;color:var(--muted);font-size:.9rem}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <h1>Lopez</h1>
+  <p>Edito vídeos curtos, vídeos longos, talking head e conteúdo de games.</p>
+  <div class="timeline" aria-hidden="true">
+    <span class="c1">Short form</span><span class="c2">Long form</span><span class="c3">Talking head</span><span class="c4">Games</span>
+  </div>
+</div></header>
+
+<main class="wrap">
+  <div class="filters" id="filtros" role="group" aria-label="Filtrar por tipo de vídeo"></div>
+  <div class="grid" id="grade"></div>
+
+  <section class="contato" id="contato">
+    <h2>Vamos trabalhar juntos?</h2>
+    <p>Me chama e conta o que você precisa editar.</p>
+    <div class="links" id="links"></div>
+  </section>
+</main>
+<footer><div class="wrap">© <span id="ano"></span> Lopez</div></footer>
+
+<script>
+/* ====== EDITE AQUI ======
+   arquivo + capa: caminho do vídeo .mp4 e da imagem de capa dentro do repositório.
+   youtube: ou cole só o ID do vídeo (o trecho depois de v= na URL, ou depois de /shorts/). */
+const CATEGORIAS = {
+  short:   "Short form",
+  long:    "Long form",
+  talking: "Talking head",
+  games:   "Games"
+};
+const VIDEOS = [
+  { titulo: "Talking head – MasterClass", cat: "talking", arquivo: "videos/talking-head-masterclass.mp4", capa: "capas/talking-head-masterclass.jpg" },
+  { titulo: "Primeiro vídeo",             cat: "games",   arquivo: "videos/primeiro-video.mp4",            capa: "capas/primeiro-video.jpg" }
+  /* Para adicionar outro: copie uma linha e troque os dados.
+     Se o vídeo estiver no YouTube, use  youtube: "ID_DO_VIDEO"  no lugar de arquivo/capa. */
+];
+const CONTATOS = [
+  { texto: "E-mail",    url: "mailto:seuemail@exemplo.com" },
+  { texto: "Instagram", url: "https://instagram.com/seuusuario" },
+  { texto: "YouTube",   url: "https://youtube.com/@seucanal" }
+];
+/* ========================= */
+
+const grade = document.getElementById("grade");
+const filtros = document.getElementById("filtros");
+let ativo = "todos";
+
+function desenhar(){
+  grade.innerHTML = "";
+  VIDEOS.filter(v => ativo === "todos" || v.cat === ativo).forEach(v => {
+    const card = document.createElement("article");
+    card.className = "card"; card.dataset.cat = v.cat;
+    let thumb;
+    if (v.arquivo){
+      thumb = document.createElement("button");
+      thumb.className = "thumb";
+      thumb.setAttribute("aria-label", "Assistir: " + v.titulo);
+      thumb.innerHTML = '<img loading="lazy" alt="" src="' + v.capa + '"><span class="play">▶</span>';
+      thumb.onclick = () => {
+        const vid = document.createElement("video");
+        vid.src = v.arquivo; vid.poster = v.capa;
+        vid.controls = true; vid.autoplay = true; vid.playsInline = true;
+        vid.style.cssText = "position:absolute;inset:0;width:100%;height:100%;background:#000";
+        thumb.replaceChildren(vid);
+      };
+    } else if (v.youtube){
+      thumb = document.createElement("button");
+      thumb.className = "thumb";
+      thumb.setAttribute("aria-label", "Assistir: " + v.titulo);
+      thumb.innerHTML = '<img loading="lazy" alt="" src="https://img.youtube.com/vi/' + v.youtube + '/hqdefault.jpg"><span class="play">▶</span>';
+      thumb.onclick = () => {
+        const f = document.createElement("iframe");
+        f.src = "https://www.youtube-nocookie.com/embed/" + v.youtube + "?autoplay=1";
+        f.allow = "autoplay; encrypted-media; picture-in-picture";
+        f.allowFullscreen = true; f.title = v.titulo;
+        thumb.replaceChildren(f);
+      };
+    } else {
+      thumb = document.createElement("div");
+      thumb.className = "thumb vazio";
+      thumb.textContent = "Vídeo em breve";
+    }
+    const h = document.createElement("h3"); h.textContent = v.titulo;
+    const s = document.createElement("small"); s.textContent = CATEGORIAS[v.cat];
+    card.append(thumb, h, s);
+    grade.append(card);
+  });
+}
+
+[["todos","Todos"], ...Object.entries(CATEGORIAS)].forEach(([chave, nome]) => {
+  const b = document.createElement("button");
+  b.textContent = nome; b.setAttribute("aria-pressed", chave === ativo);
+  b.onclick = () => {
+    ativo = chave;
+    filtros.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b));
+    desenhar();
+  };
+  filtros.append(b);
+});
+
+CONTATOS.forEach(c => {
+  const a = document.createElement("a");
+  a.href = c.url; a.textContent = c.texto;
+  if (!c.url.startsWith("mailto:")) { a.target = "_blank"; a.rel = "noopener"; }
+  document.getElementById("links").append(a);
+});
+document.getElementById("ano").textContent = new Date().getFullYear();
+desenhar();
+</script>
+</body>
+</html>
